@@ -1,0 +1,28 @@
+Date    Who       Start Stop  Interruptions Question    TimeOnTask    Comments
+03/01   EF,JD     10:00 11:00                 01         1hr          We began discussing the correct approach for this problem, 
+								         	we decided on doing Q1 first
+03/01   EF,JD     11:00 15:00                 01         4hr          Work on Data Definition 
+=========================================================commit==============================================================
+03/02   EF,JD     14:00 15:00                 01         1hr          Done with nested-rep?
+03/02   FE,JD     15:00 17:00                 01         2hr          Done with nested-to-flat also
+=========================================================commit==============================================================
+03/03   EF,JD     10:30 13:30                 02         3hrs         Start working on Data definition
+=========================================================commit==============================================================
+03/04   EF,JD     15:30 18:40                 02         3.10hr       Add few helper functions
+=========================================================commit==============================================================
+03/05   EF,JD     12:20 15:40                 02         3.20hr       work on multiply expr
+03/05   EF,JD     16:20 20:00                 02         3.40hr       work on plus expr
+=========================================================commit==============================================================
+03/06   EF,JD     10:40 11:50                 02         1.10hr       Find some bugs, fixing them
+03/06   EF,JD     12:30 17:10                 02         4.40hr       Add all possible test cases,go through the design recipe
+										one more time.
+=========================================================commit==============================================================
+03/08   EF,JD     19:30 20:30                 01         1hr         Add all test cases
+
+
+Total Time On Task Q1 (minutes)               540  
+Total Time On Task Q2 (minutes)               1140  
+
+
+TOTQ1 (hours and tenths)                      9
+TOTQ2 (hours and tenths)                      19

@@ -1,0 +1,15 @@
+1. Make sure the datatypes (i.e. integer/ number) are EXACTLY as specified in the problem set.
+2. Number of copies on hand = nonnegative integer
+3. reorder status (both positive integers)
+4. use cons? instead of else when doing the template for lists
+5. Remember to add (book-fn) like so:
+
+
+(define (lob-fn lob)
+  (cond
+    [(empty? lob) ...]
+    [cons? (...
+           (book-fn (first lob))
+           (lob-fn (rest lob)))]))
+
+6. DO NOT do recursion on helper functions, do it in the main function. (will be useful for next week)

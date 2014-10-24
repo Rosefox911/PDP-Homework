@@ -1,0 +1,21 @@
+Date    Who       Start Stop  Interruptions Question    TimeOnTask    Comments
+03/12   EF,JD     10:00 16:00                 01         8hr          We began discussing the correct approach for this problem, 
+																	  we decided on doing Q1 first because, we also began discussing 
+																	  difference approaches on how to handle question 2.
+=========================================================commit to github at 16:01==============================================================
+03/13   EF,JD     11:00 15:00                 02         4hr          Work on Data Definition for Q2, we decided on a bfs (Breadth-first search) method.
+=========================================================commit to github 15:01 ==============================================================
+03/14   EF,JD     14:00 15:00                 02         1hr          Done with comments/termination argument for the function
+=========================================================commit to github 15:03==============================================================
+03/15   EF,JD     10:00 13:00                 02         5hrs         We have a working version of the algorithm, but it is messy. We will need to split it up some.
+=========================================================commit to github 13:01==============================================================
+03/16	EF/JD	  11:00 14:00				  02		 3hrs	      We split up the main algorithm functions and we added some test cases, we also fixed a small bug we ran into where it wasn't starting at 1, but instead indexing at 0.
+=========================================================commit to github 14:05==============================================================
+03/17 EF,JD		 9:00 12:00 				  02		 3hrs         We went through comments, making sure everything was OK. Fixed some typos in question 02.
+=========================================================commit to github 12:02==============================================================
+
+Total Time On Task Q1 (minutes)               480  
+Total Time On Task Q2 (minutes)               960 
+
+TOTQ1 (hours and tenths)                      8
+TOTQ2 (hours and tenths)                      16

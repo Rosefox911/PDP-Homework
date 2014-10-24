@@ -1,0 +1,58 @@
+Date   	Who    Start	Stop	Interruptions	Question     TimeOnTask    Comments
+
+03/19  MD, JD   10:30   12:30 	     30           1            120          Worked on data definitions
+									    and function position-set-equal?
+
+================================committing to git: 03/19 12:52 ================================================
+
+03/19  MD, JD   14:00   16:00 	     50           1            120          Worked function obstacle? 
+									    and board-to-obstacles
+
+================================committing to git: 03/19 16:11 ================================================
+
+03/20  MD, JD   15:30   18:00 	     20           1            150          Worked function board-to-obstacles
+
+================================committing to git: 03/20 20:33 ================================================
+
+03/21  MD, JD   10:30   12:30 	     00           2            120          Worked on data definitions
+
+================================committing to git: 03/21 12:30 ================================================
+
+03/21  MD, JD   13:30   17:30 	     30           2            240          Worked on function path
+
+================================committing to git: 03/21 17:44 ================================================
+
+03/22  MD, JD   10:30   12:00 	     20           1            90          Worked on function board-to-obstacles
+
+
+03/22  MD, JD   17:00   21:40 	     40           2            260         Worked on function path
+
+
+================================committing to git: 03/22 21:44 ================================================
+
+03/22  MD, JD   22:30   01:00 	     20           2            150         Worked function path
+
+03/23  MD, JD   09:30   10:15 	     00           1            45          Worked problem 1 test and contract’s
+
+================================committing to git: 03/23 10:15 ================================================
+
+03/23  MD, JD   12:30   15:00 	     40           2            150         Worked problem 2 bugs
+
+03/23  MD, JD   21:00   21:30 	     00           2            30          Worked problem 2 few changes
+
+================================committing to git: 03/23 21:30 ================================================
+
+03/24  MD, JD   10:00   13:20 	     00           2            200          Worked problem 2 few changes
+
+================================committing to git: 03/24 13:20 ================================================
+
+03/24  MD, JD   13:00   14:48 	     00           1            108          Worked problem 1 few changes
+
+================================committing to git: 03/24 13:20 ================================================
+
+
+Total Time On Task Q1 (minutes)  	633          
+Total Time On Task Q2 (minutes)       	1150
+          
+TOTQ1 (hours and tenths)          	10.5         
+TOTQ2 (hours and tenths)             	19.1 

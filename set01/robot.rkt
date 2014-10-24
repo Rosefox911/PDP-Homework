@@ -1,0 +1,332 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname robot) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ())))
+(require rackunit)
+(require rackunit/text-ui)
+(require 2htdp/image)
+(require "extras.rkt")
+
+(provide
+  initial-robot
+  robot-left 
+  robot-right
+  robot-forward
+  move-robot
+  robot-north? 
+  robot-south? 
+  robot-east? 
+  robot-west?)
+
+;; DATA DEFINITIONS
+
+(define-struct robot (x y direction))
+;; A Robot is a (make-robot Integer Integer String)
+;; Interpretation:
+;; x is the x coordinate of the graphics-style coordinates
+;; y is the y coordinate of the graphics-style coordinates
+;; direction represents the direction the robot will be facing. It can be one of the following:
+;; -- "north"
+;; -- "south"
+;; -- "east"
+;; -- "west"
+;; robot-fn : Robot -> ??
+;(define (robot-fn ro)
+;  [cond
+;    [(string=? (robot-direction robot) "north")...]
+;    [(string=? (robot-direction robot) "south")...]
+;    [(string=? (robot-direction robot) "east")...]
+;    [(string=? (robot-direction robot) "west")...]])
+
+
+;; initial-robot : Integer Integer -> Robot
+;; GIVEN: a set of (x,y) coordinates
+;; RETURNS: a robot with its center at those coordinates, facing north.
+;; EXAMPLES: 
+;; (initial-robot 50 50) -> (make-robot 50 50 "north")
+;; (initial-robot 10 10) -> (make-robot 10 10 "north")
+;; STRATEGY:  Functional Composition
+
+(define (initial-robot x y)
+  (make-robot x y "north"))
+
+;; TESTS
+;(define-test-suite initial-robot-tests
+;  (check-equal? (initial-robot 50 50) (make-robot 50 50 "north"))
+;  (check-equal? (initial-robot 10 10) (make-robot 10 10 "north")))
+;(run-tests initial-robot-tests)
+
+;; robot-left : Robot -> Robot
+;; GIVEN: a robot
+;; RETURNS: a robot like the original, but turned 90 degrees left.
+;; EXAMPLES: 
+;; (robot-left (initial-robot 10 10)) -> (make-robot 10 10 "west")
+;; (robot-left (make-robot 10 10 "south")) -> (make-robot 10 10 "east")
+;; (robot-left (make-robot 10 10 "east")) -> (make-robot 10 10 "north")
+;; (robot-left (make-robot 10 10 "west")) -> (make-robot 10 10 "south")
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-left robot)
+  [cond
+   [(string=? (robot-direction robot) "north") 
+    (make-robot (robot-x robot) (robot-y robot) "west")]
+   [(string=? (robot-direction robot) "south") 
+    (make-robot (robot-x robot) (robot-y robot) "east")]
+   [(string=? (robot-direction robot) "east") 
+    (make-robot (robot-x robot) (robot-y robot) "north")]
+   [(string=? (robot-direction robot) "west") 
+    (make-robot (robot-x robot) (robot-y robot) "south")]])
+
+;; TESTS
+;; (define-test-suite robot-left-tests
+;;  (check-equal? (robot-left (initial-robot 10 10)) (make-robot 10 10 "west"))
+;;  (check-equal? (robot-left (make-robot 10 10 "south")) (make-robot 10 10 "east"))
+;;  (check-equal? (robot-left (make-robot 10 10 "east")) (make-robot 10 10 "north"))
+;;  (check-equal? (robot-left (make-robot 10 10 "west")) (make-robot 10 10 "south")))
+;; (run-tests robot-left-tests)
+
+;; robot-right : Robot -> Robot
+;; GIVEN: a robot
+;; RETURNS: a robot like the original, but turned 90 degrees right.
+;; EXAMPLES: 
+;; (robot-right (initial-robot 10 10)) -> (make-robot 10 10 "east")
+;; (robot-right (make-robot 10 10 "south")) -> (make-robot 10 10 "west")
+;; (robot-right (make-robot 10 10 "east")) -> (make-robot 10 10 "south")
+;; (robot-right (make-robot 10 10 "west")) -> (make-robot 10 10 "north")
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-right robot)
+  [cond
+   [(string=? (robot-direction robot) "north") 
+    (make-robot (robot-x robot) (robot-y robot) "east")]
+   [(string=? (robot-direction robot) "south") 
+    (make-robot (robot-x robot) (robot-y robot) "west")]
+   [(string=? (robot-direction robot) "east") 
+    (make-robot (robot-x robot) (robot-y robot) "south")]
+   [(string=? (robot-direction robot) "west") 
+    (make-robot (robot-x robot) (robot-y robot) "north")]])
+
+;; TESTS
+;(define-test-suite robot-right-tests
+;  (check-equal? (robot-right (initial-robot 10 10)) (make-robot 10 10 "east"))
+;  (check-equal? (robot-right (make-robot 10 10 "south")) (make-robot 10 10 "west"))
+;  (check-equal? (robot-right (make-robot 10 10 "east")) (make-robot 10 10 "south"))
+;  (check-equal? (robot-right (make-robot 10 10 "west")) (make-robot 10 10 "north")))
+;; (run-tests robot-right-tests)
+
+;; robot-forward : Robot PosInt -> Robot
+;; GIVEN: a robot and a distance
+;; RETURNS: a robot like the given one, but moved forward by the
+;; specified number of pixels.  If moving forward the specified number of
+;; pixels would cause the robot to move from being entirely inside the
+;; canvas to being even partially outside the canvas, then the robot
+;; should stop at the wall.
+;; EXAMPLES: 
+;; (robot-forward (initial-robot 20 20) 10) -> (make-robot 20 15 "north")
+;; (robot-forward (make-robot 100 100 "south") 10) -> (make-robot 100 110 "south")
+;; (robot-forward (make-robot 200 200 "east") 10) -> (make-robot 210 200 "east")
+;; (robot-forward (make-robot 30 30 "west") 10) -> (make-robot 20 30 "west")
+;; (robot-forward (initial-robot 10 10) 10) -> (make-robot 10 10 "north")
+;; STRATEGY: Functional Composition
+;; NOTE: I noticed a possible condition not established in the prompt. 
+;; What happens if a robot is outside the canvas, and does an extremely large coordinate change request (say 500 movement-amount, when its initial position is barely outside the canvas). 
+;; The robot would be outside the canvas, then inside the canvas, then go outside the canvas again.
+;; This is a situation I am not addressing because it will complicate the problem beyond its original intent.
+
+
+(define (robot-forward robot movement-amount)
+  (if (inside-canvas? robot) 
+      (move-robot robot (calc-max-dist robot movement-amount)) 
+      (move-outside-canvas-robot robot movement-amount)))
+
+;; TESTS
+;(define-test-suite robot-forward-tests
+; (check-equal? (robot-forward (initial-robot 20 20) 10) (make-robot 20 15 "north") "It did not equal (make-robot 20 15 north)")
+; (check-equal? (robot-forward (make-robot 100 100 "south") 10) (make-robot 100 110 "south") "It did not equal (make-robot 100 110 south)")
+; (check-equal? (robot-forward (make-robot 200 200 "east") 10) (make-robot 210 200 "east") "It did not equal (make-robot 210 200 east)")
+; (check-equal? (robot-forward (make-robot 30 30 "west") 10) (make-robot 20 30 "west") "It did not equal (make-robot 20 30 west)")
+; (check-equal? (robot-forward (initial-robot 10 10) 10) (make-robot 10 0 "north") "It did not equal (make-robot 10 0 north)"))
+;; (run-tests robot-forward-tests)
+
+; ;calc-max-dist : Robot Movement-Amount -> Integer
+;; GIVEN: A robot and its intended movement amount
+;; RETURNS: an integer representing the movement the robot is allowed to do.
+;; EXAMPLES:
+;; (calc-max-dist (make-robot 100 100 "north") 10) -> 90
+;; (calc-max-dist (make-robot 100 100 "south") 10) -> 110
+;; (calc-max-dist (make-robot 100 100 "east") 10) -> 110
+;; (calc-max-dist (make-robot 100 100 "west") 10) -> 90
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (calc-max-dist robot movement-amount)
+[cond
+  [(string=? (robot-direction robot) "north") (if ( > 15 (- (robot-y robot) movement-amount)) 15 (- (robot-y robot) movement-amount))]
+  [(string=? (robot-direction robot) "south") (if (< 400 (+ (robot-y robot) movement-amount)) 385 (+ (robot-y robot) movement-amount))]
+  [(string=? (robot-direction robot) "east") (if (< 400 (+ (robot-x robot) movement-amount)) 385 (+ (robot-x robot) movement-amount))]
+  [(string=? (robot-direction robot) "west") (if (> 15 (- (robot-x robot) movement-amount)) 15 (- (robot-x robot) movement-amount))]])
+
+;; TESTS
+;(define-test-suite calc-max-dist-tests
+;; (check-equal? (calc-max-dist (make-robot 100 100 "north") 10) 90 "It did not equal 90!")
+;; (check-equal? (calc-max-dist (make-robot 100 100 "south") 10) 110 "It did not equal 110!")
+;; (check-equal? (calc-max-dist (make-robot 100 100 "east") 10) 110 "It did not equal 110!")
+;; (check-equal? (calc-max-dist (make-robot 100 100 "west") 10) 90 "It did not equal 90!")
+;; (run-tests calc-max-dist-tests)
+
+;; move-outside-canvas-robot : Robot Movement-Amount -> Robot
+;; GIVEN: A robot and its intended movement amount
+;; RETURNS: A robot
+;; EXAMPLES:
+;; (move-outside-canvas-robot (make-robot 200 200 "north") 10) -> (make-robot 200 190 "north")
+;; (move-outside-canvas-robot (make-robot 200 200 "south") 10) -> (make-robot 200 210 "south")
+;; (move-outside-canvas-robot (make-robot 200 400 "east") 10) -> (make-robot 210 400 "east")
+;; (move-outside-canvas-robot (make-robot 200 400 "west") 10) -> (make-robot 190 400 "west")
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (move-outside-canvas-robot robot movement-amount)
+  [cond
+    [(string=? (robot-direction robot) "north") 
+     (make-robot (robot-x robot) 
+                 (- (robot-y robot) movement-amount) (robot-direction robot))]
+    [(string=? (robot-direction robot) "south") 
+     (make-robot (robot-x robot) 
+                 (+ (robot-y robot) movement-amount) (robot-direction robot))]
+    [(string=? (robot-direction robot) "east") 
+     (make-robot (+ (robot-x robot) movement-amount) 
+                 (robot-y robot) (robot-direction robot))]
+    [(string=? (robot-direction robot) "west") 
+     (make-robot (- (robot-x robot) movement-amount) 
+                 (robot-y robot) (robot-direction robot))]])
+
+;; TESTS
+;(define-test-suite move-outside-canvas-robot-tests
+;; (check-equal? (move-outside-canvas-robot (make-robot 200 200 "north") 10) (make-robot 200 190 "north") "It did not equal  (make-robot 200 190 north)!")
+;; (check-equal? (move-outside-canvas-robot (make-robot 200 200 "south") 10) (make-robot 200 210 "south") "It did not equal (make-robot 200 210 south)!")
+;; (check-equal? (move-outside-canvas-robot (make-robot 200 400 "east") 10) (make-robot 210 400 "east") "It did not equal (make-robot 210 400 east)!")
+;; (move-outside-canvas-robot (make-robot 200 400 "west") 10) (make-robot 190 400 "west") "It did not equal (make-robot 190 400 west)!")
+;; (run-tests move-outside-canvas-robot-tests)
+
+;; inside-canvas? : Robot -> Boolean
+;; GIVEN: A robot
+;; RETURNS: A boolean
+;; EXAMPLES:
+;; (inside-canvas? (make-robot -100 100 "north")) -> false
+;; (inside-canvas? (make-robot 100 100 "south")) -> true
+;; (inside-canvas? (initial-robot 10 10)) -> false
+;; STRATEGY: Structural Decomposition on robot : Robot
+;; robot-direction is part of the template, but not neccessary here.
+
+(define (inside-canvas? robot)
+ (and (and (> 185 (robot-x robot)) (< 15 (robot-x robot))) 
+      (and (> 385 (robot-y robot)) (< 15 (robot-y robot)))))
+
+;(define-test-suite move-outside-canvas-robot-tests
+;  (check-equal? (inside-canvas? (make-robot -100 100 "north"))  false "It did not equal false!")
+;  (check-equal? (inside-canvas? (make-robot 100 100 "south"))  true "It did not equal true!")
+;  (check-equal? (inside-canvas? (initial-robot 10 10))  false "It did not equal false!"))
+;(run-tests move-outside-canvas-robot-tests)
+
+
+;; move-robot : Robot Movement-Amount -> Robot
+;; GIVEN: a robot and its intended movement amount
+;; RETURNS: a robot on that has been moved by the movement amount specified
+;; EXAMPLE:
+;; (move-robot (initial-robot 10 10) 9) -> (make-robot 10 1 "north")
+;; (move-robot (make-robot 10 10 "south") 10) -> (make-robot 10 20 "south")
+;; (move-robot (make-robot 10 10 "east") 10) -> (make-robot 20 10 "east")
+;; (move-robot (make-robot 10 10 "west") 10) -> (make-robot 0 10 "west")
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (move-robot robot movement-amount)
+  [cond
+    [(string=? (robot-direction robot) "north") 
+     (make-robot (robot-x robot) movement-amount (robot-direction robot)) ]
+    [(string=? (robot-direction robot) "south") 
+     (make-robot (robot-x robot) movement-amount (robot-direction robot))]
+    [(string=? (robot-direction robot) "east")  
+     (make-robot movement-amount (robot-y robot) (robot-direction robot))]
+    [(string=? (robot-direction robot) "west") 
+     (make-robot movement-amount (robot-y robot)  (robot-direction robot))]])
+
+;; robot-north? : Robot -> Boolean
+;; GIVEN: a robot
+;; RETURNS: Whether the robot is facing north or not.
+;; EXAMPLES: 
+;; (robot-north? (make-robot 30 30 "north") -> true
+;; (robot-north? (make-robot 30 30 "south")-> false
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-north? robot)
+  [cond
+    [(string=? (robot-direction robot) "north") true]
+    [(string=? (robot-direction robot) "south") false]
+    [(string=? (robot-direction robot) "east") false]
+    [(string=? (robot-direction robot) "west") false]])
+
+;; TESTS
+;(define-test-suite robot-north?-tests
+;  (check-equal? (robot-north? (make-robot 30 30 "north")) true )
+;  (check-equal? (robot-north? (make-robot 30 30 "south")) false))
+;; (run-tests robot-north?-tests)
+
+;; robot-south? : Robot -> Boolean
+;; GIVEN: a robot
+;; RETURNS: whether the robot is facing south or not.
+;; EXAMPLES: 
+;; (robot-south? (make-robot 30 30 "south")-> true
+;; (robot-south? (make-robot 30 30 "north") -> false
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-south? robot)
+  [cond
+    [(string=? (robot-direction robot) "north") false]
+    [(string=? (robot-direction robot) "south") true]
+    [(string=? (robot-direction robot) "east") false]
+    [(string=? (robot-direction robot) "west") false]])
+
+;; TESTS
+;(define-test-suite robot-south?-tests
+;  (check-equal? (robot-south? (make-robot 30 30 "south")) true)
+;  (check-equal? (robot-south? (make-robot 30 30 "north")) false))
+;; (run-tests robot-south?-tests)
+
+;; robot-east? : Robot -> Boolean
+;; GIVEN: a robot
+;; RETURNS: whether the robot is facing east or not.
+;; EXAMPLES: 
+;; (robot-east? (make-robot 30 30 "east")-> true
+;; (robot-east? (make-robot 30 30 "north") -> false
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-east? robot)
+  [cond
+    [(string=? (robot-direction robot) "north") false]
+    [(string=? (robot-direction robot) "south") false]
+    [(string=? (robot-direction robot) "east") true]
+    [(string=? (robot-direction robot) "west") false]])
+
+;; TESTS
+;(define-test-suite robot-east?-tests
+;  (check-equal? (robot-east? (make-robot 30 30 "east")) true)
+;  (check-equal? (robot-east? (make-robot 30 30 "north")) false))
+;; (run-tests robot-east?-tests)
+
+;; robot-west? : Robot -> Boolean
+;; GIVEN: a robot
+;; RETURNS: whether the robot is facing west or not.
+;; EXAMPLES: 
+;; (robot-south? (make-robot 30 30 "west")-> true
+;; (robot-south? (make-robot 30 30 "north") -> false
+;; STRATEGY: Structural Decomposition on robot : Robot
+
+(define (robot-west? robot)
+  [cond
+    [(string=? (robot-direction robot) "north") false]
+    [(string=? (robot-direction robot) "south") false]
+    [(string=? (robot-direction robot) "east") false]
+    [(string=? (robot-direction robot) "west") true]])
+
+;; TESTS
+;(define-test-suite robot-west?-tests
+;  (check-equal? (robot-west? (make-robot 30 30 "west")) true)
+;  (check-equal? (robot-west? (make-robot 30 30 "north")) false))
+;; (run-tests robot-west?-tests)

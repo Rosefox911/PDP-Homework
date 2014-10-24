@@ -1,0 +1,5 @@
+// 1. Define the minimum and maximum for x and y as constants
+// 2. Redo interp for MouseEvent
+3. Test cases, comment regarding what the test is testing. (i.e. robot below canvas stops after corssing into canvas)
+4. Use constants for test cases so the test cases are flexible (i.e. if they change the values, the tests won't fail)
+5. You CANNOT decompose two variables of the same datatype in the same function (i.e. posn)

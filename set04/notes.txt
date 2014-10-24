@@ -1,0 +1,11 @@
+andmap : (X -> Boolean) ListOf<X> -> Boolean
+
+
+ormap : (x -> Boolean) ListOf<X> -> Boolean
+
+
+foldr : (X Y -> Y) Y ListOf<X> -> Y
+
+filter : (X -> Boolean) ListOf<X> -> Boolean
+
+map : ListOf<X> -> ListOf<X>
